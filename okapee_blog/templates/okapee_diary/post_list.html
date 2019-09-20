@@ -1,12 +1,21 @@
 <html>
 
 <head>
-    <title>okapee's diary</title>
+    <title>okapee_diary</title>
 </head>
 
 <body>
-    <p>Hi there!</p>
-    <p>It works!</p>
+
+    {% for post in posts %}
+    <div>
+        <p>date: {{ post.created_date }}</p>
+        <h1><a href="{% url 'okapee_diary:article' post.id %}">title: {{ post.title }}</a></h1>
+        <p>{{ post.text|linebreaksbr }}</p>
+        <hr>
+    </div>
+    {% endfor %}
+
+    <a href="{% url 'okapee_diary:create_article' %}">記事の作成</a>
 </body>
 
 </html>

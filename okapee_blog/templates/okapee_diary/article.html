@@ -1,0 +1,42 @@
+<html>
+  <head>
+    <!-- bootstrap -->
+    <link
+      rel="stylesheet"
+      href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"
+    />
+  </head>
+  <body>
+    <a href="{% url 'okapee_diary:post_list' %}" class="btn btn-primary"
+      >HOMEへ戻る</a
+    >
+    <hr />
+    <h1>記事</h1>
+    <p>{{ article.title }}</p>
+    <p>{{ article.text | linebreaksbr }}</p>
+    <hr />
+    <div>
+      <h3>コメント</h3>
+      <form method="post" action="">
+        {% csrf_token %} {{ form.as_p }}
+        <input type="submit" />
+      </form>
+      <hr />
+      {% for comment in comments %}
+        author: {{ comment.author }} <br />name: {{ comment.name }} <br />{{ comment.text }}
+        <br />
+        <hr />
+        {% if request.user.id == article.author.id or request.user.id == comment.author.id %}
+            <a
+                href="{% url 'okapee_diary:delete_comment' article.id comment.id %}"
+                class="btn btn-danger"
+                >コメント削除</a>
+        {% endif %} 
+      {% endfor %}
+    </div>
+  </body>
+</html>
