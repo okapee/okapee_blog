@@ -5,8 +5,15 @@ from django.shortcuts import render, redirect  # redirect追加
 
 def post_list(request):
     posts = Post.objects.all()
+    form = forms.SearchForm()
+    print(request.GET)
+
+    if request.GET.get('q'):
+        posts = posts.filter(title__contains = request.GET.get('q')) #titleにqを含む、部分一致検索が可能
+
     return render(request, 'okapee_diary/post_list.html', {
-        'posts': posts
+        'posts': posts,
+        'form': form
     })
 
 def article(request, pk):
@@ -43,6 +50,34 @@ def create_article(request):
     return render(request, 'okapee_diary/create_article.html', {
         'form': form
     })
+
+def edit_article(request, pk):
+    article = Post.objects.get(id=pk)
+
+    if request.user.id == article.author.id: #if記事の投稿者
+        if request.method == "POST":
+            form = forms.PostForm(request.POST, instance=article)
+            if form.is_valid():
+                article = form.save(commit=False)
+                article.author = request.user
+                article.save()
+            return redirect('okapee_diary:article', pk=article.id)
+        else:
+            form = forms.PostForm(instance=article)
+            print(form)
+    else: #記事の投稿者でないのならば、記事のページに強制的に戻る
+        return redirect('okapee_diary:article', pk=article.id)
+
+    return render(request, 'okapee_diary/edit_article.html', {
+        'article':article, 'form':form
+    })
+
+def delete_article(request, pk):
+    article = Post.objects.get(id=pk)
+
+    if request.user.id == article.author.id: #記事の投稿者だけ削除実行できる。
+        article.delete()
+    return redirect('okapee_diary:post_list')
 
 def delete_comment(request, pk, comment_pk):
     comment = Comment.objects.get(id=comment_pk)

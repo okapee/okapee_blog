@@ -10,3 +10,6 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = models.Comment
         fields = ('name', 'text',)
+
+class SearchForm(forms.Form):
+    q = forms.CharField(label="検索")

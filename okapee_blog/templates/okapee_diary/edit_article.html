@@ -1,0 +1,24 @@
+<html>
+
+<head>
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+</head>
+
+<body>
+    <div>
+        <a href="{% url 'okapee_diary:post_list' %}" class="btn btn-primary">HOMEへ戻る</a>
+        <h1><a href="">記事の編集</a></h1><br>
+
+        <form method="post" action="">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit">
+            <a href="{% url 'okapee_diary:delete_article' form.instance.id %}" class="btn btn-danger">消去</a>
+        </form>
+
+    </div>
+</body>
+
+</html>

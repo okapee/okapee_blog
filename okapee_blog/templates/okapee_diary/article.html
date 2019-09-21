@@ -18,6 +18,9 @@
     <h1>記事</h1>
     <p>{{ article.title }}</p>
     <p>{{ article.text | linebreaksbr }}</p>
+    {% if request.user.id == article.author.id %}
+    <a href="{% url 'okapee_diary:edit_article' article.id %}" class="btn btn-primary">記事を編集</a>
+    {% endif %}
     <hr />
     <div>
       <h3>コメント</h3>
